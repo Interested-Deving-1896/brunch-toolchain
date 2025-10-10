@@ -1,0 +1,77 @@
+name: Build Brunch toolchain using Github Actions
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - 'README.md'
+      - 'BUILDING.md'
+concurrency:
+  group: environment-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build-brunch-toolchain:
+    name: Build Brunch toolchain
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+      - name: Display disk space
+        run: |
+          echo "Free space:"
+          df -h
+      - name: Free some disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo apt clean
+      - name: Checkout Brunch toolchain source code
+        uses: actions/checkout@v4
+      - name: Build brunch toolchain
+        run: sudo ./build.sh
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: brunch-toolchain-build
+          path: out/brunch_toolchain_*.tar.gz
+          if-no-files-found: error
+  release:
+    name: Make a Brunch toolchain release
+    permissions:
+      contents: write
+    needs: build-brunch-toolchain
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+      - name: Display disk space
+        run: |
+          echo "Free space:"
+          df -h
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: brunch-toolchain-build
+      - name: Generate release details
+        run: |
+          RELEASE_FILE=$(ls brunch_toolchain_*.tar.gz)
+          RELEASE_DATE=$(echo "$RELEASE_FILE" | cut -d'.' -f1 | cut -d'_' -f3)
+          echo "Found brunch toolchain release: ${RELEASE_FILE} with date ${RELEASE_DATE}"
+          echo "RELEASE_FILE=brunch_toolchain_${RELEASE_DATE}.tar.gz" >> $GITHUB_ENV
+          echo "RELEASE_TAG=${RELEASE_DATE}" >> $GITHUB_ENV
+          echo "RELEASE_NAME=Brunch toolchain ${RELEASE_DATE}" >> $GITHUB_ENV
+          echo "RELEASE_SHA256=$(sha256sum brunch_toolchain_${RELEASE_DATE}.tar.gz | cut -d' ' -f1)" >> $GITHUB_ENV
+      - name: Create a release and upload artifacts as assets
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ env.RELEASE_FILE }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
+          tag: "${{ env.RELEASE_TAG }}"
+          name: "${{ env.RELEASE_NAME }}"
+          commit: "${{ github.ref_name }}"
+          body: "${{ github.event.head_commit.message }}\n\nrelease_sha256sum=${{ env.RELEASE_SHA256 }}\n"
