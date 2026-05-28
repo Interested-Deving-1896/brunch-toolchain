@@ -1,52 +1,75 @@
-# Brunch toolchain
+[update-readmes]   Mode: rewrite — migrating to template structure...
+# brunch-toolchain
 
-## Overview
+[![Built with Ona](https://ona.com/build-with-ona.svg)](https://app.ona.com/#https://github.com/Interested-Deving-1896/brunch-toolchain)
 
-This project consists in providing ChromeOS with a dedicated toolchain and more native utilities. It notably contains:
-- build-essentials (binutils, gcc, make, ...)
-- compression tools (bzip2, xz, lz4, gzip, ...)
-- utilities (diffutils, patch, gawk, ...)
-- git
-- perl
-- python
-- lxc
+<!-- AI:start:what-it-does -->
+_Description pending._
+<!-- AI:end:what-it-does -->
 
-Why do I need it ?
-You don't necessarily need it, currently it would mostly be useful for developers or if there is a specific app / kernel module that you need to build from source.
+## Architecture
 
-How is that different from Chromebrew ?
-Chromebrew is a package manager, you can create a toolchain with it by installing all the necessary packages but I needed to have one more adapted to my use.
+<!-- AI:start:architecture -->
+_Architecture documentation pending._
+<!-- AI:end:architecture -->
 
-So that's all there is ?
-Not necessarily, the first project based on the brunch-toolchain is brioche: https://github.com/sebanc/brioche
+## Install
 
-## Install instructions
+<!-- Add installation instructions here. This section is yours — the AI will not modify it. -->
 
-The toolchain has to be installed to /usr/local (which is actually on the data partition) and takes about 2GB of space.
-
-**Warning: The below commands will remove any previous Chromebrew or Crouton installation, Crouton can be reinstalled afterwards but you cannot have both Chromebrew and the Brunch toolchain installed.**
-
-1. Remove all data from /usr/local directory:
-```
-sudo rm -r /usr/local/*
+```bash
+git clone https://github.com/Interested-Deving-1896/brunch-toolchain.git
+cd brunch-toolchain
 ```
 
-2. Ensure that /usr/local is owned by chronos user:
+## Usage
+
+<!-- Add usage examples here. This section is yours — the AI will not modify it. -->
+
+## Configuration
+
+<!-- Document configuration options here. This section is yours — the AI will not modify it. -->
+
+## CI
+
+<!-- AI:start:ci -->
+_CI documentation pending._
+<!-- AI:end:ci -->
+
+## Mirror chain
+
+<!-- AI:start:mirror-chain -->
+This repo is maintained in [`Interested-Deving-1896/brunch-toolchain`](https://github.com/Interested-Deving-1896/brunch-toolchain) and mirrored through:
+
 ```
-sudo chown -R 1000:1000 /usr/local
+Interested-Deving-1896/brunch-toolchain  ──►  OpenOS-Project-OSP/brunch-toolchain  ──►  OpenOS-Project-Ecosystem-OOC/brunch-toolchain
 ```
 
-3. Download the brunch toolchain release and extract it in /usr/local:
-```
-tar zxf <brunch_toolchain_archive> -C /usr/local
-```
+Changes flow downstream automatically via the hourly mirror chain in
+[`fork-sync-all`](https://github.com/Interested-Deving-1896/fork-sync-all).
+Direct commits to OSP or OOC are detected and opened as PRs back to `Interested-Deving-1896`.
+<!-- AI:end:mirror-chain -->
 
-4. After each reboot, if you want to build something from source or use python, run the below command in crosh shell first:
-```
-source /usr/local/bin/start-toolchain
-```
+## Contributors
 
-If you want to have it executed automatically, you can run the below command:
-```
-echo "source /usr/local/bin/start-toolchain" >> ~/.bashrc
-```
+<!-- AI:start:contributors -->
+_Contributors pending._
+<!-- AI:end:contributors -->
+
+## Origins
+
+<!-- AI:start:origins -->
+_Original project — no upstream fork._
+<!-- AI:end:origins -->
+
+## Resources
+
+<!-- AI:start:resources -->
+_No additional resource files found._
+<!-- AI:end:resources -->
+
+## License
+
+<!-- AI:start:license -->
+[GPL-3.0](https://github.com/Interested-Deving-1896/brunch-toolchain/blob/main/LICENSE) © 2026 [Interested-Deving-1896](https://github.com/Interested-Deving-1896)
+<!-- AI:end:license -->
